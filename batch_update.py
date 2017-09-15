@@ -50,7 +50,7 @@ updated_resource_csv = "G:\\Downloads\\finished_batch_update.csv"
 
 with open(resource_input_csv,'r', encoding='utf-8') as csvfile, open(updated_resource_csv,'w') as csvout:
     csvin = csv.reader(csvfile, delimiter='|', quoting=csv.QUOTE_MINIMAL)
-    next(csvin, None) #ignore header row
+    #next(csvin, None) #ignore header row
     for row in csvin:
 
         #variables from the input CSV (first column is row[0])
@@ -83,13 +83,25 @@ with open(resource_input_csv,'r', encoding='utf-8') as csvfile, open(updated_res
         #resource_json['notes'].append(json.loads(input_scope_content))
 
         #Update a specific existing note
-        #resource_notes = resource_json['notes']
+        #resource_notes = resource_json['extents']
         #for i, note in enumerate(resource_notes):
         #    type = note['type']
         #    if type in 'scopecontent':
         #        resource_notes[i] = json.loads(input_scope_content)
         #    else:
         #        continue
+
+		#Change date types
+        dates = []
+        resource_dates = resource_json['dates']
+        for item in resource_dates:
+            type = item['date_type']
+            if type == 'single':
+                item['date_type'] = 'inclusive'
+                dates.append(item)
+            else:
+                dates.append(item)
+        resource_json['dates'] = dates
 
         #Create the revision statement
         #revision_statement = {'date' : input_revision_date,
@@ -101,8 +113,13 @@ with open(resource_input_csv,'r', encoding='utf-8') as csvfile, open(updated_res
         #                       }
         #resource_json['revision_statements'].append(revision_statement)
 
+        #Remove the last field from an array
+        #update_array = resource_json['dates']
+        #update_array.pop()
+        #resource_json['dates'] = update_array
+
         #Delete a field from the JSON
-        resource_json.pop('title', None)
+        #resource_json.pop('title', None)
 
         #Form the JSON for the updated digital object
         resource_data = json.dumps(resource_json)
