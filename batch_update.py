@@ -92,16 +92,28 @@ with open(resource_input_csv,'r', encoding='utf-8') as csvfile, open(updated_res
         #        continue
 
 		#Change date types
-        dates = []
+        #dates = []
+        #resource_dates = resource_json['dates']
+        #for item in resource_dates:
+        #    type = item['date_type']
+        #    if type == 'single':
+        #        item['date_type'] = 'inclusive'
+        #        dates.append(item)
+        #    else:
+        #        dates.append(item)
+        #resource_json['dates'] = dates
+
+        # Add date attrs
         resource_dates = resource_json['dates']
         for item in resource_dates:
-            type = item['date_type']
-            if type == 'single':
-                item['date_type'] = 'inclusive'
-                dates.append(item)
+            if 'era' in item:
+                continue
             else:
-                dates.append(item)
-        resource_json['dates'] = dates
+                item['era'] = 'ce'
+            if 'calendar' in item:
+                continue
+            else:
+                item['calendar'] = 'gregorian'
 
         #Create the revision statement
         #revision_statement = {'date' : input_revision_date,
