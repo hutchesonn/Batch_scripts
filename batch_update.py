@@ -13,7 +13,7 @@ import getpass
 username = "admin"
 password = "admin"
 aspace_url = "http://localhost:8089"
-repo = "/repositories/2/accessions/"
+repo = "/subjects/"
 
 
 
@@ -43,10 +43,10 @@ headers = {'X-ArchivesSpace-Session':session}
 #FILE INPUT / OUTPUT STUFF:
 #prompt for input file path
 #resource_input_csv = raw_input("Path to input CSV: ")
-resource_input_csv = "C:\\Users\\HutchesonN\\Downloads\\user_defined_test.txt"
+resource_input_csv = "G:\\Downloads\\test_term_update.txt"
 #prompt for output path
 #updated_resource_csv = raw_input("Path to output CSV: ")
-updated_resource_csv = "C:\\Users\\HutchesonN\\Downloads\\finished_batch_update.csv"
+updated_resource_csv = "G:\\Downloads\\finished_term_update.csv"
 
 with open(resource_input_csv,'r', encoding='utf-8') as csvfile, open(updated_resource_csv,'w') as csvout:
     csvin = csv.reader(csvfile, delimiter='|', quoting=csv.QUOTE_MINIMAL)
@@ -55,7 +55,7 @@ with open(resource_input_csv,'r', encoding='utf-8') as csvfile, open(updated_res
 
         #variables from the input CSV (first column is row[0])
         input_uri = row[0]
-        input_user_defined = row[1]
+        input_term = row[1]
         #input_scope_content = row[2]
         #input_revision_description = row[3]
         #input_revision_date = row[4]
@@ -72,12 +72,12 @@ with open(resource_input_csv,'r', encoding='utf-8') as csvfile, open(updated_res
         #notes.append(json.loads(input_scope_content))
         #resource_json['notes'] = notes
 
-        #Update dates
-        #dates = []
-        #json_input = json.loads(input_scope_content)
-        #for item in json_input["dates"]:
-        #    dates.append(item)
-        #resource_json['dates'] = dates
+        #Update term
+        terms = []
+        json_input = json.loads(input_term)
+        for item in json_input["terms"]:
+            terms.append(item)
+        resource_json['terms'] = terms
 
         #Add a payment
         #payment_summary = []
@@ -85,9 +85,9 @@ with open(resource_input_csv,'r', encoding='utf-8') as csvfile, open(updated_res
         #resource_json['user_defined'] = json_input['user_defined']
 
         # Update user_defined fields
-        user_defined = []
-        json_input = json.loads(input_user_defined)
-        resource_json['user_defined'] = json_input['user_defined']
+        #user_defined = []
+        #json_input = json.loads(input_user_defined)
+        #resource_json['user_defined'] = json_input['user_defined']
 
         #Append new notes to end of notes
         #resource_json['notes'].append(json.loads(input_scope_content))
@@ -149,13 +149,13 @@ with open(resource_input_csv,'r', encoding='utf-8') as csvfile, open(updated_res
         #Repost the updated digital object
         resource_update = requests.post(aspace_url+repo+input_uri,headers=headers,data=resource_data).json()
         #Capture status response of post request
-        update_status = resource_update['status']
+        #update_status = resource_update['status']
 
         #Print confirmation that archival object was updated. Response should contain any warnings
-        print (resource_json['uri'] + ': ' + update_status)
+        #print (resource_json['uri'] + ': ' + update_status)
 
         #add update status to CSV
-        row.append(update_status)
+        #row.append(update_status)
 
         #Lookup the digital object again and capture JSON response for updated digital object
         #updated_resource_json = requests.get(aspace_url+repo+input_uri,headers=headers).json()
